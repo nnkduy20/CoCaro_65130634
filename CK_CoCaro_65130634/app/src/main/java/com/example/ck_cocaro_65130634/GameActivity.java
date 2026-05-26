@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Toast;
@@ -53,19 +54,9 @@ public class GameActivity extends AppCompatActivity {
             Toast.makeText(this, "PvE Mode", Toast.LENGTH_SHORT).show();
         });
 
+        // 🔥 HISTORY POPUP
         btnHistory.setOnClickListener(v -> {
-
-            if (history.isEmpty()) {
-                Toast.makeText(this, "Chưa có ván nào", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < history.size(); i++) {
-                sb.append(i + 1).append(". ").append(history.get(i)).append("\n");
-            }
-
-            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+            showHistoryDialog();
         });
     }
 
@@ -150,7 +141,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // AI
+    // AI (GIỮ NGUYÊN)
     // =========================
     private void aiMove() {
 
@@ -194,18 +185,18 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // WIN DIALOG NEON CENTER
+    // WIN POPUP
     // =========================
     private void showWinDialog(String winner) {
 
         Dialog dialog = new Dialog(GameActivity.this);
         dialog.setContentView(R.layout.dialog_win);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             dialog.getWindow().setLayout(
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
             );
             dialog.getWindow().setGravity(Gravity.CENTER);
         }
@@ -213,18 +204,62 @@ public class GameActivity extends AppCompatActivity {
         android.widget.TextView tvWinner = dialog.findViewById(R.id.tvWinner);
         Button btnReplay = dialog.findViewById(R.id.btnReplay);
 
-        tvWinner.setText("🔥 Người thắng: " + winner);
+        tvWinner.setText("🔥 WINNER: " + winner);
 
         btnReplay.setOnClickListener(v -> {
             resetGame();
             dialog.dismiss();
         });
 
+        dialog.setCancelable(false);
         dialog.show();
     }
 
     // =========================
-    // SCORE
+    // ⭐ HISTORY POPUP (THÊM MỚI)
+    // =========================
+    private void showHistoryDialog() {
+
+        Dialog dialog = new Dialog(GameActivity.this);
+        dialog.setContentView(R.layout.dialog_history);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+            dialog.getWindow().setGravity(Gravity.CENTER);
+        }
+
+        android.widget.TextView tvHistory = dialog.findViewById(R.id.tvHistory);
+        Button btnClose = dialog.findViewById(R.id.btnCloseHistory);
+
+        StringBuilder sb = new StringBuilder();
+
+        if (history.isEmpty()) {
+            sb.append("📜 CHƯA CÓ VÁN NÀO");
+        } else {
+            sb.append("📜 LỊCH SỬ GAME\n\n");
+
+            for (int i = 0; i < history.size(); i++) {
+                sb.append("▶ ").append(i + 1)
+                        .append(": ")
+                        .append(history.get(i))
+                        .append("\n");
+            }
+        }
+
+        tvHistory.setText(sb.toString());
+
+        btnClose.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    // =========================
+    // SCORE + WIN CHECK (GIỮ NGUYÊN)
     // =========================
     private int evaluate(int r, int c, String p) {
         return count(r, c, 1, 0, p) +
@@ -251,9 +286,6 @@ public class GameActivity extends AppCompatActivity {
         return count;
     }
 
-    // =========================
-    // WIN CHECK
-    // =========================
     private boolean checkWin(int row, int col) {
 
         String current = buttons[row][col].getText().toString();
@@ -295,9 +327,6 @@ public class GameActivity extends AppCompatActivity {
         return count >= 5;
     }
 
-    // =========================
-    // RESET
-    // =========================
     private void resetGame() {
 
         for (int i = 0; i < 20; i++) {

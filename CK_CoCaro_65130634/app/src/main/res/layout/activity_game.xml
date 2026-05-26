@@ -11,7 +11,16 @@
         android:layout_weight="1"
         android:columnCount="20"
         android:rowCount="20"
-        android:background="#222222" />
+        android:background="#222222"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CYBER XO"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#00F5FF"
+        android:gravity="center"
+        android:padding="10dp"/>
 
     <!-- 🔥 KHU NÚT (50% màn hình) -->
     <LinearLayout
@@ -28,8 +37,9 @@
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="PLAYER vs PLAYER"
-            android:background="#1976D2"
-            android:textColor="#FFFFFF"
+            android:textColor="#00F5FF"
+            android:textStyle="bold"
+            android:background="@drawable/btn_neon"
             android:layout_margin="10dp"/>
 
         <Button
@@ -37,8 +47,9 @@
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="PLAYER vs AI"
-            android:background="#E53935"
-            android:textColor="#FFFFFF"
+            android:textColor="#FF1744"
+            android:textStyle="bold"
+            android:background="@drawable/btn_neon"
             android:layout_margin="10dp"/>
 
         <Button
@@ -46,8 +57,9 @@
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="RESET GAME"
-            android:background="#43A047"
-            android:textColor="#FFFFFF"
+            android:textColor="#00E676"
+            android:textStyle="bold"
+            android:background="@drawable/btn_neon"
             android:layout_margin="10dp"/>
 
         <Button
@@ -55,8 +67,9 @@
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:text="HISTORY"
-            android:background="#6A1B9A"
-            android:textColor="#FFFFFF"
+            android:textColor="#D500F9"
+            android:textStyle="bold"
+            android:background="@drawable/btn_neon"
             android:layout_margin="10dp"/>
 
     </LinearLayout>
