@@ -19,25 +19,45 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="#111111"
+        android:padding="20dp">
 
         <Button
             android:id="@+id/btnPVP"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="PvP" />
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="PLAYER vs PLAYER"
+            android:background="#1976D2"
+            android:textColor="#FFFFFF"
+            android:layout_margin="10dp"/>
 
         <Button
             android:id="@+id/btnPVE"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="PvE" />
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="PLAYER vs AI"
+            android:background="#E53935"
+            android:textColor="#FFFFFF"
+            android:layout_margin="10dp"/>
 
         <Button
             android:id="@+id/btnReset"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="Reset" />
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="RESET GAME"
+            android:background="#43A047"
+            android:textColor="#FFFFFF"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="HISTORY"
+            android:background="#6A1B9A"
+            android:textColor="#FFFFFF"
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 

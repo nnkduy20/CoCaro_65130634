@@ -1,5 +1,6 @@
 package com.example.ck_cocaro_65130634;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -8,6 +9,8 @@ import android.widget.GridLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -19,6 +22,8 @@ public class GameActivity extends AppCompatActivity {
     boolean gameOver = false;
 
     int gameMode = 0;
+
+    ArrayList<String> history = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,7 @@ public class GameActivity extends AppCompatActivity {
 
         Button btnPVP = findViewById(R.id.btnPVP);
         Button btnPVE = findViewById(R.id.btnPVE);
+        Button btnHistory = findViewById(R.id.btnHistory);
 
         btnPVP.setOnClickListener(v -> {
             gameMode = 1;
@@ -46,8 +52,26 @@ public class GameActivity extends AppCompatActivity {
             resetGame();
             Toast.makeText(this, "PvE Mode", Toast.LENGTH_SHORT).show();
         });
+
+        btnHistory.setOnClickListener(v -> {
+
+            if (history.isEmpty()) {
+                Toast.makeText(this, "Chưa có ván nào", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < history.size(); i++) {
+                sb.append(i + 1).append(". ").append(history.get(i)).append("\n");
+            }
+
+            Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show();
+        });
     }
 
+    // =========================
+    // BOARD
+    // =========================
     private void createBoard() {
 
         gridLayout.removeAllViews();
@@ -88,6 +112,10 @@ public class GameActivity extends AppCompatActivity {
 
                         if (gameOver) return;
                         if (!btn.getText().toString().isEmpty()) return;
+                        if (gameMode == 0) {
+                            Toast.makeText(this, "Chọn chế độ!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         if (playerX) {
                             btn.setText("X");
@@ -99,9 +127,11 @@ public class GameActivity extends AppCompatActivity {
 
                         if (checkWin(row, col)) {
                             gameOver = true;
-                            Toast.makeText(this,
-                                    (playerX ? "X" : "O") + " thắng!",
-                                    Toast.LENGTH_LONG).show();
+
+                            String winner = playerX ? "X" : "O";
+                            history.add("Winner: " + winner);
+
+                            showWinDialog(winner);
                             return;
                         }
 
@@ -120,22 +150,23 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // 💥 AI ĐÃ FIX (THÔNG MINH + CHẶN ĐÚNG)
+    // AI
     // =========================
     private void aiMove() {
 
         if (gameOver) return;
 
+        int bestScore = -1;
         int bestR = -1;
         int bestC = -1;
-        int bestScore = -1;
 
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
 
                 if (buttons[i][j].getText().toString().isEmpty()) {
 
-                    int score = evaluate(i, j);
+                    int score = evaluate(i, j, "X") * 10 +
+                            evaluate(i, j, "O");
 
                     if (score > bestScore) {
                         bestScore = score;
@@ -153,7 +184,9 @@ public class GameActivity extends AppCompatActivity {
 
             if (checkWin(bestR, bestC)) {
                 gameOver = true;
-                Toast.makeText(this, "O thắng!", Toast.LENGTH_SHORT).show();
+                history.add("Winner: O");
+
+                showWinDialog("O");
             }
 
             playerX = true;
@@ -161,29 +194,48 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // AI EVALUATION
+    // WIN DIALOG NEON CENTER
     // =========================
-    private int evaluate(int r, int c) {
+    private void showWinDialog(String winner) {
 
-        int blockScore =
-                countLine(r, c, 1, 0, "X") +
-                        countLine(r, c, 0, 1, "X") +
-                        countLine(r, c, 1, 1, "X") +
-                        countLine(r, c, 1, -1, "X");
+        Dialog dialog = new Dialog(GameActivity.this);
+        dialog.setContentView(R.layout.dialog_win);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        int attackScore =
-                countLine(r, c, 1, 0, "O") +
-                        countLine(r, c, 0, 1, "O") +
-                        countLine(r, c, 1, 1, "O") +
-                        countLine(r, c, 1, -1, "O");
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            dialog.getWindow().setGravity(Gravity.CENTER);
+        }
 
-        return blockScore * 100 + attackScore;
+        android.widget.TextView tvWinner = dialog.findViewById(R.id.tvWinner);
+        Button btnReplay = dialog.findViewById(R.id.btnReplay);
+
+        tvWinner.setText("🔥 Người thắng: " + winner);
+
+        btnReplay.setOnClickListener(v -> {
+            resetGame();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
-    private int countLine(int r, int c, int dx, int dy, String p) {
+    // =========================
+    // SCORE
+    // =========================
+    private int evaluate(int r, int c, String p) {
+        return count(r, c, 1, 0, p) +
+                count(r, c, 0, 1, p) +
+                count(r, c, 1, 1, p) +
+                count(r, c, 1, -1, p);
+    }
+
+    private int count(int r, int c, int dx, int dy, String p) {
 
         int count = 0;
-
         int i = r + dx;
         int j = c + dy;
 
@@ -200,7 +252,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // CHECK WIN
+    // WIN CHECK
     // =========================
     private boolean checkWin(int row, int col) {
 
@@ -243,6 +295,9 @@ public class GameActivity extends AppCompatActivity {
         return count >= 5;
     }
 
+    // =========================
+    // RESET
+    // =========================
     private void resetGame() {
 
         for (int i = 0; i < 20; i++) {
