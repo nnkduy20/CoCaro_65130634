@@ -2,6 +2,7 @@ package com.example.ck_cocaro_65130634;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,20 +19,15 @@ public class MainActivity extends AppCompatActivity {
 
         btnPlay = findViewById(R.id.btnPlay);
 
-        // THÊM: kiểm tra null (tránh crash nếu layout sai id)
-        if (btnPlay == null) {
-            Toast.makeText(this,
-                    "Không tìm thấy nút PLAY!",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // ✔ CHECK AN TOÀN
+        if (btnPlay == null) return;
 
         btnPlay.setOnClickListener(v -> {
 
-            // THÊM: hiệu ứng click nhẹ (UX tốt hơn)
+            // 🔥 hiệu ứng giống game
             v.animate()
-                    .scaleX(0.95f)
-                    .scaleY(0.95f)
+                    .scaleX(0.9f)
+                    .scaleY(0.9f)
                     .setDuration(80)
                     .withEndAction(() -> v.animate()
                             .scaleX(1f)
@@ -40,25 +36,39 @@ public class MainActivity extends AppCompatActivity {
                             .start())
                     .start();
 
-            // THÊM: thông báo khi vào game (giống game thật)
+            // 🔥 thông báo vào game
             Toast.makeText(this,
-                    "Bắt đầu Cyber XO!",
+                    "Đang vào trận đấu...",
                     Toast.LENGTH_SHORT).show();
 
-            // CHUYỂN MÀN HÌNH GAME
-            Intent intent =
-                    new Intent(MainActivity.this,
-                            GameActivity.class);
+            // 🔥 delay nhẹ giống game thật
+            v.postDelayed(() -> {
 
-            startActivity(intent);
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        GameActivity.class
+                );
+
+                startActivity(intent);
+
+                // 🔥 chuyển màn mượt hơn
+                overridePendingTransition(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                );
+
+            }, 200);
         });
     }
 
-    // THÊM: xử lý khi quay lại app (UI ổn định hơn)
     @Override
     protected void onResume() {
         super.onResume();
 
-        // reset trạng thái nếu cần (không bắt buộc)
+        // reset UI nếu cần
+        if (btnPlay != null) {
+            btnPlay.setScaleX(1f);
+            btnPlay.setScaleY(1f);
+        }
     }
 }
