@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- TIÊU ĐỀ -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CỜ CARO"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="#000000"/>
+
+    <!-- NÚT RESET -->
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RESET GAME"
+        android:backgroundTint="#DDDDDD"
+        android:textColor="#000000"/>
+
+    <!-- BÀN CỜ -->
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="15"
+        android:rowCount="15"
+        android:background="#FFFFFF"
+        android:useDefaultMargins="false"
+        android:alignmentMode="alignMargins"/>
+
+</LinearLayout>

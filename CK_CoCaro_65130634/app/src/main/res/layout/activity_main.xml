@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#0D0D0D">
+
+    <!-- THÊM: khoảng cách trên (UI đẹp hơn) -->
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"/>
+
+    <!-- LOGO GAME -->
+    <TextView
+        android:text="CYBER XO"
+        android:textSize="36sp"
+        android:textColor="#00F5FF"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- THÊM: mô tả nhỏ (đồ án nhìn chuyên nghiệp hơn) -->
+    <TextView
+        android:text="Game Cờ Caro Android (Java)"
+        android:textSize="14sp"
+        android:textColor="#AAAAAA"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- NÚT PLAY -->
+    <Button
+        android:id="@+id/btnPlay"
+        android:text="PLAY"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#1A1A1A"
+        android:textColor="#FF00E5"/>
+
+    <!-- THÊM: nút phụ (tuỳ chọn nhưng giúp đồ án “xịn” hơn) -->
+    <Button
+        android:id="@+id/btnExit"
+        android:text="EXIT"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#1A1A1A"
+        android:textColor="#FF4444"/>
+
+    <!-- THÊM: khoảng cách dưới -->
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"/>
+
+</LinearLayout>
