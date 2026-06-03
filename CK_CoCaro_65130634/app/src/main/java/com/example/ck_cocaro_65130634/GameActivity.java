@@ -143,50 +143,70 @@ public class GameActivity extends AppCompatActivity {
 
     private void showDifficultyDialog() {
 
-        AlertDialog.Builder builder =
-                new AlertDialog.Builder(this);
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_difficulty);
 
-        builder.setTitle("CHỌN ĐỘ KHÓ AI");
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(
+                    android.R.color.transparent
+            );
 
-        String[] levels = {
-                "DỄ",
-                "TRUNG BÌNH",
-                "KHÓ"
-        };
+            dialog.getWindow().setLayout(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+        }
 
-        builder.setItems(levels, (dialog, which) -> {
+        Button btnEasy = dialog.findViewById(R.id.btnEasy);
+        Button btnMedium = dialog.findViewById(R.id.btnMedium);
+        Button btnHard = dialog.findViewById(R.id.btnHard);
 
-            switch (which) {
+        btnEasy.setOnClickListener(v -> {
 
-                case 0:
-                    aiLevel = 1;
-                    break;
-
-                case 1:
-                    aiLevel = 2;
-                    break;
-
-                case 2:
-                    aiLevel = 3;
-                    break;
-            }
-
+            aiLevel = 1;
             gameMode = 2;
             resetGame();
 
             Toast.makeText(
-                    GameActivity.this,
-                    "Đã chọn: " + levels[which],
+                    this,
+                    "AI DỄ",
                     Toast.LENGTH_SHORT
             ).show();
+
+            dialog.dismiss();
         });
 
-        builder.setNegativeButton(
-                "HỦY",
-                (dialog, which) -> dialog.dismiss()
-        );
+        btnMedium.setOnClickListener(v -> {
 
-        builder.show();
+            aiLevel = 2;
+            gameMode = 2;
+            resetGame();
+
+            Toast.makeText(
+                    this,
+                    "AI TRUNG BÌNH",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            dialog.dismiss();
+        });
+
+        btnHard.setOnClickListener(v -> {
+
+            aiLevel = 3;
+            gameMode = 2;
+            resetGame();
+
+            Toast.makeText(
+                    this,
+                    "AI KHÓ",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
     private int scoreLine(int r, int c,
                           int dx, int dy,
@@ -316,7 +336,7 @@ public class GameActivity extends AppCompatActivity {
         int bestR = -1;
         int bestC = -1;
 
-// ƯU TIÊN THẮNG 
+// ƯU TIÊN THẮNG
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
 
