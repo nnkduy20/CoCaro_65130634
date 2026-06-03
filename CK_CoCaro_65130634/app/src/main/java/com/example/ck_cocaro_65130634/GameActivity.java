@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AlertDialog;
+
 public class GameActivity extends AppCompatActivity {
 
     GridLayout gridLayout;
@@ -23,6 +25,7 @@ public class GameActivity extends AppCompatActivity {
     boolean gameOver = false;
 
     int gameMode = 0;
+    int aiLevel = 2;
 
     ArrayList<String> history = new ArrayList<>();
 
@@ -49,9 +52,7 @@ public class GameActivity extends AppCompatActivity {
         });
 
         btnPVE.setOnClickListener(v -> {
-            gameMode = 2;
-            resetGame();
-            Toast.makeText(this, "PvE Mode", Toast.LENGTH_SHORT).show();
+            showDifficultyDialog();
         });
 
         // 🔥 HISTORY POPUP
@@ -140,26 +141,256 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    // =========================
-    // AI
-    // =========================
+    private void showDifficultyDialog() {
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this);
+
+        builder.setTitle("CHỌN ĐỘ KHÓ AI");
+
+        String[] levels = {
+                "DỄ",
+                "TRUNG BÌNH",
+                "KHÓ"
+        };
+
+        builder.setItems(levels, (dialog, which) -> {
+
+            switch (which) {
+
+                case 0:
+                    aiLevel = 1;
+                    break;
+
+                case 1:
+                    aiLevel = 2;
+                    break;
+
+                case 2:
+                    aiLevel = 3;
+                    break;
+            }
+
+            gameMode = 2;
+            resetGame();
+
+            Toast.makeText(
+                    GameActivity.this,
+                    "Đã chọn: " + levels[which],
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        builder.setNegativeButton(
+                "HỦY",
+                (dialog, which) -> dialog.dismiss()
+        );
+
+        builder.show();
+    }
+    private int scoreLine(int r, int c,
+                          int dx, int dy,
+                          String p) {
+
+        int count = 0;
+
+        int i = r + dx;
+        int j = c + dy;
+
+        while (i >= 0 && i < 20 &&
+                j >= 0 && j < 20 &&
+                p.equals(buttons[i][j].getText().toString())) {
+
+            count++;
+            i += dx;
+            j += dy;
+        }
+
+        i = r - dx;
+        j = c - dy;
+
+        while (i >= 0 && i < 20 &&
+                j >= 0 && j < 20 &&
+                p.equals(buttons[i][j].getText().toString())) {
+
+            count++;
+            i -= dx;
+            j -= dy;
+        }
+
+        switch (count) {
+            case 4: return 100000;
+            case 3: return 10000;
+            case 2: return 1000;
+            case 1: return 100;
+            default: return 10;
+        }
+    }
     private void aiMove() {
 
         if (gameOver) return;
+
+        // ===== DỄ =====
+        if (aiLevel == 1) {
+
+            ArrayList<int[]> emptyCells = new ArrayList<>();
+
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 20; j++) {
+
+                    if (buttons[i][j].getText().toString().isEmpty()) {
+                        emptyCells.add(new int[]{i, j});
+                    }
+                }
+            }
+
+            if (!emptyCells.isEmpty()) {
+
+                int random =
+                        (int) (Math.random() * emptyCells.size());
+
+                int row = emptyCells.get(random)[0];
+                int col = emptyCells.get(random)[1];
+
+                buttons[row][col].setText("O");
+                buttons[row][col].setTextColor(Color.RED);
+
+                if (checkWin(row, col)) {
+                    gameOver = true;
+                    history.add("Winner: O");
+                    showWinDialog("O");
+                }
+
+                playerX = true;
+            }
+
+            return;
+        }
+
+        // ===== TRUNG BÌNH =====
+        if (aiLevel == 2) {
+
+            int bestScore = -1;
+            int bestR = -1;
+            int bestC = -1;
+
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 20; j++) {
+
+                    if (buttons[i][j].getText().toString().isEmpty()) {
+
+                        int score =
+                                evaluate(i, j, "X") * 10
+                                        + evaluate(i, j, "O");
+
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestR = i;
+                            bestC = j;
+                        }
+                    }
+                }
+            }
+
+            if (bestR != -1) {
+
+                buttons[bestR][bestC].setText("O");
+                buttons[bestR][bestC].setTextColor(Color.RED);
+
+                if (checkWin(bestR, bestC)) {
+
+                    gameOver = true;
+                    history.add("Winner: O");
+                    showWinDialog("O");
+                }
+
+                playerX = true;
+            }
+
+            return;
+        }
+
+        // ===== KHÓ =====
 
         int bestScore = -1;
         int bestR = -1;
         int bestC = -1;
 
+// ƯU TIÊN THẮNG 
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
 
                 if (buttons[i][j].getText().toString().isEmpty()) {
 
-                    int score = evaluate(i, j, "X") * 10 +
-                            evaluate(i, j, "O");
+                    buttons[i][j].setText("O");
+
+                    boolean win = checkWin(i, j);
+
+                    buttons[i][j].setText("");
+
+                    if (win) {
+                        bestR = i;
+                        bestC = j;
+
+                        buttons[bestR][bestC].setText("O");
+                        buttons[bestR][bestC].setTextColor(Color.RED);
+
+                        gameOver = true;
+                        history.add("Winner: O");
+                        showWinDialog("O");
+
+                        return;
+                    }
+                }
+            }
+        }
+
+// CHẶN NGƯỜI CHƠI
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+
+                if (buttons[i][j].getText().toString().isEmpty()) {
+
+                    buttons[i][j].setText("X");
+
+                    boolean playerWin = checkWin(i, j);
+
+                    buttons[i][j].setText("");
+
+                    if (playerWin) {
+
+                        buttons[i][j].setText("O");
+                        buttons[i][j].setTextColor(Color.RED);
+
+                        playerX = true;
+
+                        return;
+                    }
+                }
+            }
+        }
+
+// TÍNH ĐIỂM
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+
+                if (buttons[i][j].getText().toString().isEmpty()) {
+
+                    int attack =
+                            evaluate(i, j, "O") * 40;
+
+                    int defend =
+                            evaluate(i, j, "X") * 60;
+
+                    int center =
+                            (20 - Math.abs(10 - i)
+                                    - Math.abs(10 - j)) * 10;
+
+                    int score =
+                            attack + defend + center;
 
                     if (score > bestScore) {
+
                         bestScore = score;
                         bestR = i;
                         bestC = j;
@@ -174,9 +405,9 @@ public class GameActivity extends AppCompatActivity {
             buttons[bestR][bestC].setTextColor(Color.RED);
 
             if (checkWin(bestR, bestC)) {
+
                 gameOver = true;
                 history.add("Winner: O");
-
                 showWinDialog("O");
             }
 
@@ -262,10 +493,11 @@ public class GameActivity extends AppCompatActivity {
     // SCORE + WIN CHECK
     // =========================
     private int evaluate(int r, int c, String p) {
-        return count(r, c, 1, 0, p) +
-                count(r, c, 0, 1, p) +
-                count(r, c, 1, 1, p) +
-                count(r, c, 1, -1, p);
+
+        return scoreLine(r, c, 1, 0, p)
+                + scoreLine(r, c, 0, 1, p)
+                + scoreLine(r, c, 1, 1, p)
+                + scoreLine(r, c, 1, -1, p);
     }
 
     private int count(int r, int c, int dx, int dy, String p) {
