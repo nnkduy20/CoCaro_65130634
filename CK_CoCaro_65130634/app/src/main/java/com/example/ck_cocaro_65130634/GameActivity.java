@@ -141,7 +141,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // AI (GIỮ NGUYÊN)
+    // AI
     // =========================
     private void aiMove() {
 
@@ -216,7 +216,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // ⭐ HISTORY POPUP (THÊM MỚI)
+    //  HISTORY POPUP
     // =========================
     private void showHistoryDialog() {
 
@@ -259,7 +259,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // =========================
-    // SCORE + WIN CHECK (GIỮ NGUYÊN)
+    // SCORE + WIN CHECK
     // =========================
     private int evaluate(int r, int c, String p) {
         return count(r, c, 1, 0, p) +
