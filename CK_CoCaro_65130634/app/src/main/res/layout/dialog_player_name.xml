@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_neon_dialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PLAYER SETUP"
+        android:textColor="#00F5FF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/edtPlayer1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="PLAYER X"
+        android:textColor="#00F5FF"
+        android:textColorHint="#55FFFFFF"
+        android:background="@drawable/edit_neon"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/edtPlayer2"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="12dp"
+        android:hint="PLAYER O"
+        android:textColor="#FF1744"
+        android:textColorHint="#55FFFFFF"
+        android:background="@drawable/edit_neon"
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:text="START GAME"
+        android:textStyle="bold"
+        android:textColor="#00F5FF"
+        android:background="@drawable/btn_neon"/>
+
+</LinearLayout>

@@ -28,6 +28,8 @@ public class GameActivity extends AppCompatActivity {
     int aiLevel = 2;
 
     ArrayList<String> history = new ArrayList<>();
+    String player1Name = "Player X";
+    String player2Name = "Player O";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +48,14 @@ public class GameActivity extends AppCompatActivity {
         Button btnHistory = findViewById(R.id.btnHistory);
 
         btnPVP.setOnClickListener(v -> {
-            gameMode = 1;
-            resetGame();
-            Toast.makeText(this, "PvP Mode", Toast.LENGTH_SHORT).show();
+            showPlayerNameDialog();
         });
 
         btnPVE.setOnClickListener(v -> {
             showDifficultyDialog();
         });
 
-        // 🔥 HISTORY POPUP
+        //  HISTORY POPUP
         btnHistory.setOnClickListener(v -> {
             showHistoryDialog();
         });
@@ -120,8 +120,13 @@ public class GameActivity extends AppCompatActivity {
                         if (checkWin(row, col)) {
                             gameOver = true;
 
-                            String winner = playerX ? "X" : "O";
-                            history.add("Winner: " + winner);
+                            String winner;
+
+                            if (gameMode == 2) {
+                                winner = playerX ? "NGƯỜI CHƠI" : "MÁY";
+                            } else {
+                                winner = playerX ? player1Name : player2Name;
+                            }
 
                             showWinDialog(winner);
                             return;
@@ -139,6 +144,56 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void showPlayerNameDialog() {
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_player_name);
+        if (dialog.getWindow() != null) {
+
+            dialog.getWindow().setBackgroundDrawableResource(
+                    android.R.color.transparent);
+
+            dialog.getWindow().setLayout(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+
+            dialog.getWindow().setGravity(Gravity.CENTER);
+        }
+
+        android.widget.EditText edtPlayer1 =
+                dialog.findViewById(R.id.edtPlayer1);
+
+        android.widget.EditText edtPlayer2 =
+                dialog.findViewById(R.id.edtPlayer2);
+
+        Button btnStart =
+                dialog.findViewById(R.id.btnStart);
+
+        btnStart.setOnClickListener(v -> {
+
+            String p1 =
+                    edtPlayer1.getText().toString().trim();
+
+            String p2 =
+                    edtPlayer2.getText().toString().trim();
+
+            if (!p1.isEmpty()) {
+                player1Name = p1;
+            }
+
+            if (!p2.isEmpty()) {
+                player2Name = p2;
+            }
+
+            gameMode = 1;
+            resetGame();
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     private void showDifficultyDialog() {
@@ -169,7 +224,7 @@ public class GameActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    "AI DỄ",
+                    "MÁY DỄ",
                     Toast.LENGTH_SHORT
             ).show();
 
@@ -184,7 +239,7 @@ public class GameActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    "AI TRUNG BÌNH",
+                    "MÁY TRUNG BÌNH",
                     Toast.LENGTH_SHORT
             ).show();
 
@@ -199,7 +254,7 @@ public class GameActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    "AI KHÓ",
+                    "MÁY KHÓ",
                     Toast.LENGTH_SHORT
             ).show();
 
@@ -277,8 +332,8 @@ public class GameActivity extends AppCompatActivity {
 
                 if (checkWin(row, col)) {
                     gameOver = true;
-                    history.add("Winner: O");
-                    showWinDialog("O");
+                    history.add("Winner: Máy ");
+                    showWinDialog("Máy");
                 }
 
                 playerX = true;
@@ -320,8 +375,8 @@ public class GameActivity extends AppCompatActivity {
                 if (checkWin(bestR, bestC)) {
 
                     gameOver = true;
-                    history.add("Winner: O");
-                    showWinDialog("O");
+                    history.add("Winner: Máy");
+                    showWinDialog("Máy");
                 }
 
                 playerX = true;
@@ -356,8 +411,8 @@ public class GameActivity extends AppCompatActivity {
                         buttons[bestR][bestC].setTextColor(Color.RED);
 
                         gameOver = true;
-                        history.add("Winner: O");
-                        showWinDialog("O");
+                        history.add("Winner: Máy");
+                        showWinDialog("Máy");
 
                         return;
                     }
@@ -427,8 +482,8 @@ public class GameActivity extends AppCompatActivity {
             if (checkWin(bestR, bestC)) {
 
                 gameOver = true;
-                history.add("Winner: O");
-                showWinDialog("O");
+                history.add("Winner: Máy");
+                showWinDialog("Máy");
             }
 
             playerX = true;
