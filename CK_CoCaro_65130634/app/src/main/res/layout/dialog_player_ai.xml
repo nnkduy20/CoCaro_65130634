@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_neon_dialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CYBER AI SETUP"
+        android:textColor="#00F5FF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/edtPlayerName"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Nhập tên người chơi"
+        android:textColor="#00F5FF"
+        android:textColorHint="#88FFFFFF"
+        android:background="@drawable/edit_neon"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHỌN ĐỘ KHÓ"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnEasy"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="DỄ"
+        android:textColor="#00FF66"
+        android:textStyle="bold"
+        android:background="@drawable/btn_neon"/>
+
+    <Button
+        android:id="@+id/btnMedium"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="10dp"
+        android:text="TRUNG BÌNH"
+        android:textColor="#FFD600"
+        android:textStyle="bold"
+        android:background="@drawable/btn_neon"/>
+
+    <Button
+        android:id="@+id/btnHard"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="10dp"
+        android:text="KHÓ"
+        android:textColor="#FF1744"
+        android:textStyle="bold"
+        android:background="@drawable/btn_neon"/>
+
+</LinearLayout>

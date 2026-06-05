@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
@@ -28,9 +29,8 @@ public class GameActivity extends AppCompatActivity {
     int aiLevel = 2;
 
     ArrayList<String> history = new ArrayList<>();
-    String player1Name = "Player X";
-    String player2Name = "Player O";
-
+    String player1Name = "Player";
+    String player2Name = "AI";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity {
         });
 
         btnPVE.setOnClickListener(v -> {
-            showDifficultyDialog();
+            showPlayerVsAIDialog();
         });
 
         //  HISTORY POPUP
@@ -118,20 +118,30 @@ public class GameActivity extends AppCompatActivity {
                         }
 
                         if (checkWin(row, col)) {
+
                             gameOver = true;
 
                             String winner;
 
                             if (gameMode == 2) {
-                                winner = playerX ? "NGƯỜI CHƠI" : "MÁY";
+
+                                winner = playerX
+                                        ? player1Name
+                                        : player2Name;
+
                             } else {
-                                winner = playerX ? player1Name : player2Name;
+
+                                winner = playerX
+                                        ? player1Name
+                                        : player2Name;
                             }
 
+                            history.add("Winner: " + winner);
+
                             showWinDialog(winner);
+
                             return;
                         }
-
                         playerX = !playerX;
 
                         if (gameMode == 2 && !playerX && !gameOver) {
@@ -520,7 +530,88 @@ public class GameActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.show();
     }
+    //POPUP MAY
+    private void showPlayerVsAIDialog() {
 
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_player_ai);
+
+        if (dialog.getWindow() != null) {
+
+            dialog.getWindow().setBackgroundDrawableResource(
+                    android.R.color.transparent);
+
+            dialog.getWindow().setLayout(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+        }
+
+        EditText edtPlayerName =
+                dialog.findViewById(R.id.edtPlayerName);
+
+        Button btnEasy =
+                dialog.findViewById(R.id.btnEasy);
+
+        Button btnMedium =
+                dialog.findViewById(R.id.btnMedium);
+
+        Button btnHard =
+                dialog.findViewById(R.id.btnHard);
+
+        btnEasy.setOnClickListener(v -> {
+
+            String name =
+                    edtPlayerName.getText().toString().trim();
+
+            if (!name.isEmpty())
+                player1Name = name;
+
+            player2Name = "CYBER AI";
+
+            aiLevel = 1;
+            gameMode = 2;
+
+            resetGame();
+            dialog.dismiss();
+        });
+
+        btnMedium.setOnClickListener(v -> {
+
+            String name =
+                    edtPlayerName.getText().toString().trim();
+
+            if (!name.isEmpty())
+                player1Name = name;
+
+            player2Name = "CYBER AI";
+
+            aiLevel = 2;
+            gameMode = 2;
+
+            resetGame();
+            dialog.dismiss();
+        });
+
+        btnHard.setOnClickListener(v -> {
+
+            String name =
+                    edtPlayerName.getText().toString().trim();
+
+            if (!name.isEmpty())
+                player1Name = name;
+
+            player2Name = "CYBER AI";
+
+            aiLevel = 3;
+            gameMode = 2;
+
+            resetGame();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
     // =========================
     //  HISTORY POPUP
     // =========================
